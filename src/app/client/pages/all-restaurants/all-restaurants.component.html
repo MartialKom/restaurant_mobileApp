@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Restaurants</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-row>
+      <ion-col>
+        <ion-select [(ngModel)]="selectedCity" (ionChange)="filterRestaurants()">
+          <!--<ion-select-option value="">Toutes les villes</ion-select-option>-->
+          <ion-select-option value="yaoundé">Yaoundé</ion-select-option>
+          <ion-select-option value="douala">Douala</ion-select-option>
+        </ion-select>
+      </ion-col>
+      <ion-col>
+        <ion-select [(ngModel)]="selectedType" (ionChange)="filterRestaurants()">
+          <ion-select-option value="">Tous les types</ion-select-option>
+          <ion-select-option value="fast-food">Fast-Food</ion-select-option>
+          <ion-select-option value="café">Café</ion-select-option>
+        </ion-select>
+      </ion-col>
+      <ion-col>
+        <ion-button (click)="toggleOpenOnly()">{{ openOnly ? 'Tous' : 'Ouvert' }}</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-searchbar [(ngModel)]="searchTerm" (ionChange)="filterRestaurants()"></ion-searchbar>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let restaurant of filteredRestaurants" (click)="viewRestaurantDetails(restaurant)">
+      <ion-thumbnail slot="start">
+        <img [src]="restaurant.image" [alt]="restaurant.name">
+      </ion-thumbnail>
+      <ion-label>
+        <h2>{{ restaurant.name }}</h2>
+        <p>Type : {{ restaurant.type }}</p>
+        <p>Ouvert : {{ restaurant.openingHours }}</p>
+      </ion-label>
+      <ion-icon [color]="restaurant.isOpen ? 'success' : 'danger'" slot="end" name="ellipse"></ion-icon>
+    </ion-item>
+  </ion-list>
+</ion-content>
