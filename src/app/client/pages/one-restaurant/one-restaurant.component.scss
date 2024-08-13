@@ -1,0 +1,100 @@
+.restaurant-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+  
+    img {
+      width: 100%;
+      max-width: 400px;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+  
+    ion-card-header {
+      margin-top: 10px;
+      text-align: center;
+    }
+  }
+  
+  ion-card {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+  }
+  
+  ion-item {
+    --padding-start: 10px;
+    --inner-padding-end: 0;
+    border-bottom: 1px solid #e0e0e0;
+  
+    ion-icon {
+      color: #555;
+      font-size: 20px;
+      margin-right: 10px;
+    }
+  }
+  
+  ion-button {
+    margin-top: 20px;
+    --background: #3880ff;
+    --background-hover: #2d6cd8;
+    --color: #fff;
+    --box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  
+    ion-icon {
+      margin-right: 8px;
+    }
+  }
+
+// ... styles précédents ...
+
+.menu-card {
+  margin-top: 20px;
+
+  ion-accordion-group {
+    margin-top: 10px;
+  }
+
+  ion-item {
+    --background: transparent;
+    --border-color: transparent;
+    --padding-start: 10px;
+    --inner-padding-end: 10px;
+  }
+
+  .accordion-content {
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+  }
+
+  .dish-price-container {
+    display: flex;
+    align-items: center; // Centrer verticalement le prix
+  }
+  .dish-price {
+    font-weight: bold;
+    font-size: 16px;
+    color: #333;
+    background-color: #328827;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+}
+.restaurant-description {
+  p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+    text-align: justify;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
+
+

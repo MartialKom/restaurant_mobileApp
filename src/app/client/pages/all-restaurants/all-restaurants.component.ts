@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Restaurant } from '../../models/restaurant';
 import { Router } from '@angular/router';
 import { RestaurantService } from '../../services/restaurant/restaurant.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-all-restaurants',
@@ -9,44 +10,7 @@ import { RestaurantService } from '../../services/restaurant/restaurant.service'
   styleUrls: ['./all-restaurants.component.scss'],
 })
 export class AllRestaurantsComponent  implements OnInit {
-  restaurants: Restaurant[] = [
-    {
-      id: 1,
-      name: 'Le Bistro',
-      type: 'Café',
-      openingHours: '8h - 20h',
-      closingHours: '12h',
-      city: 'Yaoundé',
-      image: 'https://via.placeholder.com/300x200',
-      address:'',
-      phone: '',
-      email: '',
-      description: '',
-      rating: 0,
-      capacity: 0,
-      menuDtoList : [],
-      isOpen: false,
-
-    },
-    {
-      id: 2,
-      name: 'Burger King',
-      type: 'Fast-Food',
-      openingHours: '10h - 22h',
-      closingHours: '12h',
-      city: 'Douala',
-      image: 'https://via.placeholder.com/300x200',
-      address:'',
-      phone: '',
-      email: '',
-      description: '',
-      rating: 0,
-      capacity: 0,
-      menuDtoList : [],
-      isOpen: true,
-    }
-    // Ajoutez d'autres données de restaurants ici
-  ];
+  restaurants: Restaurant[] = [] ;
 
   filteredRestaurants: Restaurant[] = [];
   selectedCity: string = 'yaoundé';
@@ -56,23 +20,21 @@ export class AllRestaurantsComponent  implements OnInit {
 
   constructor(private router: Router, private restaurantService: RestaurantService) { }
 
-  ngOnInit() {
-    this.filterRestaurants();
+  async ngOnInit() {
+    (await this.restaurantService.getOnRestaurant(environment.getAllRestaurantPath+this.selectedCity)).subscribe(
+      (response:any) => {
+        console.log("Data: "+response.content);
+        this.restaurants = response.content;
+        this.filterRestaurants();
+      }
+    );    
   }
 
-  filterRestaurants() {
-
-    this.restaurantService.getRestaurants(this.selectedCity).subscribe(
-      (response) => {
-        console.log("Data: "+response);
-        //this.restaurants = response.data.content;
-      }
-    );
-
+   filterRestaurants() {
     this.filteredRestaurants = this.restaurants.filter(restaurant => {
       const cityMatch = this.selectedCity === '' || restaurant.city.toLowerCase() === this.selectedCity.toLowerCase();
       const typeMatch = this.selectedType === '' || restaurant.type.toLowerCase() === this.selectedType.toLowerCase();
-      const openMatch = !this.openOnly || restaurant.isOpen;
+      const openMatch = !this.openOnly || restaurant.open;
       const searchMatch = restaurant.name.toLowerCase().includes(this.searchTerm.toLowerCase());
       return cityMatch && typeMatch && openMatch && searchMatch;
     });

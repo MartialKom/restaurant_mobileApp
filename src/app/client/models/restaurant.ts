@@ -1,4 +1,5 @@
-import { Menu } from "./Menu";
+import { Menu } from "./menu";
+
 
 export interface Restaurant {
   id: number;
@@ -15,5 +16,5 @@ export interface Restaurant {
   closingHours: string;
   capacity: number;
   menuDtoList: Menu[];
-  isOpen: boolean;
+  open: boolean;
 }

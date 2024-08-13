@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Restaurant } from '../../models/restaurant';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ export class RestaurantService {
 
   constructor(private http: HttpClient) { }
 
-  public getRestaurants(city:string){
-    return this.http.get('http://localhost:8000/restaurant/city/'+city);
+  async getOnRestaurant(path:string){
+    return await this.http.get(environment.baseUrl+path);
   }
 }

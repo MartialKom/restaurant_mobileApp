@@ -1,0 +1,163 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/restaurants/all"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Détails du restaurant</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+
+<ion-content>
+  <div class="restaurant-header">
+    <img [src]="restaurant?.image" [alt]="restaurant?.name" (click)="viewMap()">
+    <ion-card-header>
+      <ion-card-title>{{ restaurant?.name }}</ion-card-title>
+      <ion-card-subtitle>{{ restaurant?.type }}</ion-card-subtitle>
+    </ion-card-header>
+  </div>
+
+  <ion-card>
+    <ion-card-content class="restaurant-description">
+      <p>{{ restaurant?.description }}</p>
+      <ion-item>
+        <ion-icon name="people" slot="start"></ion-icon>
+        <ion-label>Capacité : {{ restaurant?.capacity }} places</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="call" slot="start"></ion-icon>
+        <ion-label>Téléphone : {{ restaurant?.phone }}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="mail" slot="start"></ion-icon>
+        <ion-label>Email : {{ restaurant?.email }}</ion-label>
+      </ion-item>
+      <ion-button expand="block" id="open-modal" >
+        <ion-icon name="calendar" slot="start"></ion-icon>
+        Faire une réservation
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="menu-card">
+    <ion-card-header>
+      <ion-card-title>Menu</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-accordion-group [multiple]="true">
+        <ion-accordion *ngFor="let day of daysOfWeek; let i = index">
+          <ion-item slot="header" color="light">
+            <ion-label>{{ day }}</ion-label>
+          </ion-item>
+          <div class="accordion-content" slot="content">
+            <ion-list *ngFor="let menu of restaurant?.menuDtoList">
+              <div *ngIf="menu.days == day">
+                <ion-item *ngFor="let dish of menu.dishes" [color]="getDishColor(i)">
+                  <ion-label>{{ dish.name }}</ion-label>
+                  <div class="dish-price-container">
+                    <ion-note class="dish-price">{{ dish.price}} FCFA</ion-note>
+                  </div>
+                </ion-item>
+              </div>
+            </ion-list>
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-modal trigger="open-modal" (willDismiss)="onWillDismiss($event)" >
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancel()">Cancel</ion-button>
+          </ion-buttons>
+          <ion-title> Reservation</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <form #reservationForm="ngForm" (ngSubmit)="onSubmitReservation(reservationForm)">
+          <ion-item>
+            <ion-label position="floating" style="margin-bottom: 20px;">Date</ion-label>
+            <ion-datetime-button datetime="reservationDate"></ion-datetime-button>
+            <ion-modal [keepContentsMounted]="true">
+              <ng-template>
+                <ion-datetime
+                  id="reservationDate"
+                  [ngModel]="reservationDate"
+                  name="reservationDate"
+                  presentation="date"
+                  (ionChange)="onDateChange($event)"
+                  required
+                ></ion-datetime>
+              </ng-template>
+            </ion-modal>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating" style="margin-bottom: 20px;">Heure de début</ion-label>
+            <ion-datetime-button datetime="startTime"></ion-datetime-button>
+            <ion-modal [keepContentsMounted]="true">
+              <ng-template>
+                <ion-datetime
+                  id="startTime"
+                  [ngModel]="startTime"
+                  name="startTime"
+                  presentation="time"
+                  (ionChange)="onStartTimeChange($event)"
+                  required
+                ></ion-datetime>
+              </ng-template>
+            </ion-modal>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating" style="margin-bottom: 20px;">Heure de fin</ion-label>
+            <ion-datetime-button datetime="endTime"></ion-datetime-button>
+            <ion-modal [keepContentsMounted]="true">
+              <ng-template>
+                <ion-datetime
+                  id="endTime"
+                  [ngModel]="endTime"
+                  name="endTime"
+                  presentation="time"
+                  (ionChange)="onEndTimeChange($event)"
+                  required
+                ></ion-datetime>
+              </ng-template>
+            </ion-modal>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating" style="margin-bottom: 16px;">Votre Nom</ion-label>
+            <ion-input
+              type="text"
+              [(ngModel)]="reservationName"
+              name="reservationName"
+              required
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating" style="margin-bottom: 16px;">Nombre de places</ion-label>
+            <ion-input
+              type="number"
+              [(ngModel)]="reservationSeats"
+              name="reservationSeats"
+              required
+            ></ion-input>
+          </ion-item>
+
+          <ion-button type="submit" expand="block">
+            Réserver
+          </ion-button>
+        </form>
+
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+
+</ion-content>
