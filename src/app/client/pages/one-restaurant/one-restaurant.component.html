@@ -18,6 +18,8 @@
     </ion-card-header>
   </div>
 
+  <ion-loading [isOpen]="isLoading" [spinner]="'crescent'" [duration]="0"></ion-loading>
+
   <ion-card>
     <ion-card-content class="restaurant-description">
       <p>{{ restaurant?.description }}</p>
@@ -79,8 +81,11 @@
       </ion-header>
       <ion-content class="ion-padding">
         <form #reservationForm="ngForm" (ngSubmit)="onSubmitReservation(reservationForm)">
+          <ion-note color="danger" *ngIf="invalidForm" >
+            Tous les champs sont requis !
+          </ion-note>
           <ion-item>
-            <ion-label position="floating" style="margin-bottom: 20px;">Date</ion-label>
+            <ion-label position="floating" style="margin-bottom: 30px;">Date</ion-label>
             <ion-datetime-button datetime="reservationDate"></ion-datetime-button>
             <ion-modal [keepContentsMounted]="true">
               <ng-template>
@@ -97,7 +102,7 @@
           </ion-item>
 
           <ion-item>
-            <ion-label position="floating" style="margin-bottom: 20px;">Heure de début</ion-label>
+            <ion-label position="floating" style="margin-bottom: 30px;">Heure de début</ion-label>
             <ion-datetime-button datetime="startTime"></ion-datetime-button>
             <ion-modal [keepContentsMounted]="true">
               <ng-template>
@@ -114,7 +119,7 @@
           </ion-item>
 
           <ion-item>
-            <ion-label position="floating" style="margin-bottom: 20px;">Heure de fin</ion-label>
+            <ion-label position="floating" style="margin-bottom: 30px;">Heure de fin</ion-label>
             <ion-datetime-button datetime="endTime"></ion-datetime-button>
             <ion-modal [keepContentsMounted]="true">
               <ng-template>
@@ -131,7 +136,7 @@
           </ion-item>
 
           <ion-item>
-            <ion-label position="floating" style="margin-bottom: 16px;">Votre Nom</ion-label>
+            <ion-label position="floating" style="margin-bottom: 20px;">Votre Nom</ion-label>
             <ion-input
               type="text"
               [(ngModel)]="reservationName"
@@ -141,7 +146,7 @@
           </ion-item>
 
           <ion-item>
-            <ion-label position="floating" style="margin-bottom: 16px;">Nombre de places</ion-label>
+            <ion-label position="floating" style="margin-bottom: 20px;">Nombre de places</ion-label>
             <ion-input
               type="number"
               [(ngModel)]="reservationSeats"

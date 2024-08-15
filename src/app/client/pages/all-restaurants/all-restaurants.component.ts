@@ -17,15 +17,19 @@ export class AllRestaurantsComponent  implements OnInit {
   selectedType: string = '';
   openOnly: boolean = false;
   searchTerm: string = '';
+  isLoading = false;
 
   constructor(private router: Router, private restaurantService: RestaurantService) { }
 
   async ngOnInit() {
+    this.isLoading = true;
     (await this.restaurantService.getOnRestaurant(environment.getAllRestaurantPath+this.selectedCity)).subscribe(
       (response:any) => {
         console.log("Data: "+response.content);
         this.restaurants = response.content;
         this.filterRestaurants();
+      },(err)=>{
+        this.isLoading = false;
       }
     );    
   }
@@ -38,6 +42,7 @@ export class AllRestaurantsComponent  implements OnInit {
       const searchMatch = restaurant.name.toLowerCase().includes(this.searchTerm.toLowerCase());
       return cityMatch && typeMatch && openMatch && searchMatch;
     });
+    this.isLoading = false;
   }
 
   toggleOpenOnly() {

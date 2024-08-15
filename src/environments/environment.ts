@@ -6,7 +6,9 @@ export const environment = {
   production: false,
   baseUrl: 'http://localhost:8000/',
   getAllRestaurantPath: 'restaurant/city/',
-  getOneRestaurantPath:'restaurant/'
+  getOneRestaurantPath:'restaurant/',
+  reservationPath: 'reservation/',
+  reservationListKey: 'reservationList'
 };
 
 /*

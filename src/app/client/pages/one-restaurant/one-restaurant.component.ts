@@ -7,45 +7,93 @@ import { reservationRequest } from '../../models/reservation.request';
 import { NgForm } from '@angular/forms';
 import { IonModal } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core/components';
+import { reservationDto } from '../../models/reservation.dto';
+import { LocalStorageService } from '../../services/storage/local-storage.service';
+import { ToastController } from '@ionic/angular';
+
 
 @Component({
   selector: 'app-one-restaurant',
   templateUrl: './one-restaurant.component.html',
   styleUrls: ['./one-restaurant.component.scss'],
 })
-export class OneRestaurantComponent  implements OnInit {
+export class OneRestaurantComponent implements OnInit {
+  restaurant: Restaurant | undefined;
+  invalidForm: boolean = false;
+  isLoading = false;
+  restaurantId!: string | null;
+  reservationList: reservationDto[] =[];
+  reservationDto!: reservationDto ;
 
-  restaurant: Restaurant | undefined ;
-  reservation: reservationRequest | undefined;
-  daysOfWeek = ['LUNDI', 'MARDI', 'MERCREDI', 'JEUDI', 'VENDREDI', 'SAMEDI', 'DIMANCHE', 'ALLDAYS'];
+  reservation: reservationRequest = {
+    restaurantId: 0,
+    reservationDate: '',
+    startTime: '',
+    endTime: '',
+    nbOfPeople: 0,
+    clientName: '',
+  };
+
+  daysOfWeek = [
+    'LUNDI',
+    'MARDI',
+    'MERCREDI',
+    'JEUDI',
+    'VENDREDI',
+    'SAMEDI',
+    'DIMANCHE',
+    'ALLDAYS',
+  ];
   colors = ['primary', 'secondary', 'tertiary', 'success', 'warning', 'danger'];
   isModalOpen = false;
   reservationName!: string;
 
-  message = 'This modal example uses triggers to automatically open a modal when the button is clicked.';
+  message =
+    'This modal example uses triggers to automatically open a modal when the button is clicked.';
 
-  reservationDate!: string;
-  startTime!: string;
-  endTime!: string;
-  reservationSeats!: number;
-  
-  constructor(private route: ActivatedRoute, private router: Router, private restaurantService: RestaurantService) { }
+  reservationDate: string = this.myFormatDate(new Date());
+  startTime: string = new Date().toISOString()
+  endTime: string = new Date().toISOString()
+  reservationSeats: number = 1;
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private restaurantService: RestaurantService,
+    private localStorage: LocalStorageService,
+    private toastController: ToastController
+  ) {}
 
   async ngOnInit() {
-    const restaurantId = this.route.snapshot.paramMap.get('id');
-    (await this.restaurantService.getOnRestaurant(environment.getOneRestaurantPath+restaurantId)).subscribe(
-      (response:any)=>{
-        this.restaurant = response.content;
-      }
-    )
+    const restaurantId = this.restaurantId = this.route.snapshot.paramMap.get('id');
+    (
+      await this.restaurantService.getOnRestaurant(
+        environment.getOneRestaurantPath + restaurantId
+      )
+    ).subscribe((response: any) => {
+      this.restaurant = response.content;
+    });
   }
+
+  async presentToast(position: 'top' | 'middle' | 'bottom', message: string, color: 'success' | 'danger') {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 5000,
+      color: color,
+      position: position,
+    });
+
+    await toast.present();
+  }
+
+
 
   makeReservation() {
     // Logique pour faire une réservation
     this.isModalOpen = true;
   }
 
-  viewMap(){
+  viewMap() {
     this.router.navigate(['/restaurants/map', this.restaurant?.address]);
   }
 
@@ -53,41 +101,89 @@ export class OneRestaurantComponent  implements OnInit {
     return this.colors[index % this.colors.length];
   }
 
-
   dismissModal() {
     this.isModalOpen = false;
   }
 
   onDateChange(event: any) {
-    this.reservation!.reservationDate = event.detail.value;
+    this.invalidForm = false;
+    this.reservationDate = event.detail.value;
   }
 
   onStartTimeChange(event: any) {
-    this.reservation!.startTime = event.detail.value;
+    this.invalidForm = false;
+    this.startTime = event.detail.value;
   }
 
   onEndTimeChange(event: any) {
-    this.reservation!.endTime = event.detail.value;
+    this.invalidForm = false;
+    this.endTime = event.detail.value;
   }
 
-  onSubmitReservation(form: NgForm) {
+  async onSubmitReservation(form: NgForm) {
     if (form.valid) {
-      // Traiter la soumission du formulaire ici
-      console.log('Réservation soumise:', form.value);
-      this.dismissModal();
-      // Réinitialiser les champs du formulaire après la soumission
-      this.reservationDate = "";
-      this.startTime = "";
-      this.endTime = "";
-      this.reservationName = "";
-      this.reservationSeats = 0;
-      form.resetForm();
-    }
+      this.invalidForm = false;
+      this.isLoading = true;
+      this.reservation.reservationDate = this.reservationDate.split('T')[0];
 
+      console.log('date: ' + this.reservation.reservationDate);
+      const date = new Date(this.startTime);
+      const startHours = date.getHours().toString().padStart(2, '0');
+      const startMinutes = date.getMinutes().toString().padStart(2, '0');
+
+      this.reservation.startTime = `${startHours}:${startMinutes}`;
+      console.log('start time: ' + this.reservation.startTime);
+
+      const endDate = new Date(this.endTime);
+      const endHours = date.getHours().toString().padStart(2, '0');
+      const endMinutes = date.getMinutes().toString().padStart(2, '0');
+
+      this.reservation.endTime = `${endHours}:${endMinutes}`;
+      console.log('end time: ' + this.reservation.endTime);
+
+      this.reservation.clientName = this.reservationName;
+      this.reservation.nbOfPeople = this.reservationSeats;
+
+      const restaurantId = Number.parseInt(this.restaurantId || "4");
+      this.reservation.restaurantId = restaurantId;
+      (
+        await this.restaurantService.makeReservation(
+          environment.reservationPath,
+          this.reservation
+        )
+      ).subscribe(async (response: any) => {
+
+        if(response.content){
+          console.log(response.content);
+
+          this.reservationList =  await this.localStorage.get(environment.reservationListKey);
+          this.reservationDto = response.content;
+
+          this.reservationList.push(this.reservationDto);
+          await this.localStorage.set(environment.reservationListKey, this.reservationList);
+
+          this.isLoading = false;
+          
+          form.resetForm();
+          this.cancel();
+          this.presentToast("middle", "Reservation réussie", "success");
+        } 
+
+      },(err)=>{
+        console.log("An error occur: "+err.error);
+        this.isLoading = false;
+        if(err.status == 400){
+          this.presentToast("top",err.error.validationErrors[0], "danger");
+        } else
+        this.presentToast("top",err.error.errorMessage, "danger");
+      });
+
+    } else {
+      this.invalidForm = true;
+    }
   }
 
   @ViewChild(IonModal) modal: IonModal | undefined;
-
 
   cancel() {
     this.modal!.dismiss(null, 'cancel');
@@ -104,4 +200,11 @@ export class OneRestaurantComponent  implements OnInit {
     }
   }
 
+  myFormatDate(date: Date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Les mois sont indexés à partir de 0
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Restaurant } from '../../models/restaurant';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { reservationRequest } from '../../models/reservation.request';
 
 @Injectable({
   providedIn: 'root'
@@ -13,5 +14,9 @@ export class RestaurantService {
 
   async getOnRestaurant(path:string){
     return await this.http.get(environment.baseUrl+path);
+  }
+
+  async makeReservation(path:string, reservation: reservationRequest){
+    return await this.http.post(environment.baseUrl+path, reservation);
   }
 }
