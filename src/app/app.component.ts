@@ -9,8 +9,8 @@ import { environment } from 'src/environments/environment';
 })
 export class AppComponent implements OnInit {
   public appPages = [
-    { title: 'All restaurants', url: '/restaurants/all', icon: 'restaurant' },
-    { title: 'My Reservations', url: '/reservations/', icon: 'bookmarks' },
+    { title: 'Restaurants', url: '/restaurants/all', icon: 'restaurant' },
+    { title: 'Mes Reservations', url: '/restaurants/reservations', icon: 'bookmarks' },
   ];
   listReservation: reservationDto[] = [];
   public labels = ['Food', 'Fun'];

@@ -35,7 +35,7 @@
 
 <ion-content>
   <ion-loading [isOpen]="isLoading" [spinner]="'crescent'" [duration]="0"></ion-loading>
-  
+  <p style="text-align: center;" *ngIf="filteredRestaurants.length == 0 && isLoading == false"> Aucun restaurant trouvé</p>
   <ion-list>
     <ion-item *ngFor="let restaurant of filteredRestaurants" (click)="viewRestaurantDetails(restaurant)">
       <ion-thumbnail slot="start">

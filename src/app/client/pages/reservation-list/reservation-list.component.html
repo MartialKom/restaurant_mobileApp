@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Reservations</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-loading [isOpen]="loading" [spinner]="'crescent'" [duration]="0"></ion-loading>
+  <p style="text-align: center;" *ngIf="reservationList.length < 1 && loading == false">Aucune reservation trouvée</p>
+  <ion-list>
+    <ion-item-sliding *ngFor="let reservation of reservationList; let i = index">
+      <ion-item lines="none" class="reservation-item">
+        <div class="item-image">
+          <ion-avatar>
+            <img src="https://via.placeholder.com/150" alt="Image réservation">
+          </ion-avatar>
+        </div>
+        <div class="item-content">
+          <h2>{{ i + 1 }}. {{ reservation.restaurant.name }}</h2>
+          <p><b>{{ reservation.reservationDate | date }}</b></p>
+          <p><b>{{ reservation.startTime }} -
+            {{ reservation.endTime }}</b></p>
+            <p><b>{{ reservation.nbOfPeople }} personnes</b></p>
+        </div>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="presentAlert(reservation.reservationNumber, i)">
+          <ion-icon name="trash" slot="icon-only"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+</ion-content>

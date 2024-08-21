@@ -19,4 +19,8 @@ export class RestaurantService {
   async makeReservation(path:string, reservation: reservationRequest){
     return await this.http.post(environment.baseUrl+path, reservation);
   }
+
+  async deleteReservation(reservationNumber: string){
+    return await this.http.delete(environment.baseUrl+environment.reservationPath+reservationNumber);
+  }
 }

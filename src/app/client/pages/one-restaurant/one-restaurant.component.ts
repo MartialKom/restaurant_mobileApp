@@ -135,8 +135,8 @@ export class OneRestaurantComponent implements OnInit {
       console.log('start time: ' + this.reservation.startTime);
 
       const endDate = new Date(this.endTime);
-      const endHours = date.getHours().toString().padStart(2, '0');
-      const endMinutes = date.getMinutes().toString().padStart(2, '0');
+      const endHours = endDate.getHours().toString().padStart(2, '0');
+      const endMinutes = endDate.getMinutes().toString().padStart(2, '0');
 
       this.reservation.endTime = `${endHours}:${endMinutes}`;
       console.log('end time: ' + this.reservation.endTime);

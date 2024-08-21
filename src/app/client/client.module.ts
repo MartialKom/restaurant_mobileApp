@@ -6,10 +6,11 @@ import { AllRestaurantsComponent } from './pages/all-restaurants/all-restaurants
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { OneRestaurantComponent } from './pages/one-restaurant/one-restaurant.component';
+import { ReservationListComponent } from './pages/reservation-list/reservation-list.component';
 
 
 @NgModule({
-  declarations: [AllRestaurantsComponent, OneRestaurantComponent],
+  declarations: [AllRestaurantsComponent, OneRestaurantComponent, ReservationListComponent],
   imports: [
     CommonModule,
     ClientRoutingModule,

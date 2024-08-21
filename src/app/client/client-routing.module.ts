@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AllRestaurantsComponent } from './pages/all-restaurants/all-restaurants.component';
 import { OneRestaurantComponent } from './pages/one-restaurant/one-restaurant.component';
+import { ReservationListComponent } from './pages/reservation-list/reservation-list.component';
 
 const routes: Routes = [
   {
@@ -20,8 +21,13 @@ const routes: Routes = [
         path: 'one/:id',
         component: OneRestaurantComponent
       },
+      {
+        path: 'reservations',
+        component: ReservationListComponent
+      }
     ]
-  }
+  },
+
 ];
 
 @NgModule({

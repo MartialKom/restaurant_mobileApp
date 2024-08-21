@@ -1,0 +1,50 @@
+ion-item {
+  --background: #ffffff7a;
+  --padding-start: 8px;
+  --padding-end: 8px;
+  --inner-padding-end: 8px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+}
+.reservation-item {
+  --background: rgb(26, 120, 69);
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --inner-padding-end: 0;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+
+  .item-image {
+    margin-right: 16px;
+
+    ion-avatar {
+      width: 64px;
+      height: 64px;
+    }
+  }
+
+  .item-content {
+    margin-right: auto; // Ajout de cette ligne
+    padding-right: 16px; // Ajout de cette ligne
+
+    h2 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: rgb(10, 58, 142);
+    }
+
+    p {
+      font-size: 14px;
+      color: #2c2626;
+      margin: 0;
+      margin-bottom: 4px;
+    }
+  }
+
+
+}
