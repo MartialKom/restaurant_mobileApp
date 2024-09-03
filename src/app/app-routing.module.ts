@@ -11,10 +11,6 @@ const routes: Routes = [
     path: 'restaurants',
     loadChildren: () => import('./client/client.module').then( m => m.ClientModule)
   },
-  {
-    path: 'folder/:id',
-    loadChildren: () => import('./folder/folder.module').then( m => m.FolderPageModule)
-  }
 ];
 
 @NgModule({
