@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Login</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-loading [isOpen]="loading" [spinner]="'crescent'" [duration]="0"></ion-loading>
+
+  <div class="login-container">
+    <div class="logo">
+      <img src="assets/logo-dining.png" alt="Logo">
+    </div>
+    <form (ngSubmit)="restaurantLogin()">
+      <ion-item lines="none">
+        <ion-input [(ngModel)]="name" type="text" placeholder="Nom du restaurant" name="name" required></ion-input>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-input [(ngModel)]="login" type="text" placeholder="Login" name="login" required></ion-input>
+      </ion-item>
+      <ion-button type="submit" expand="block" [disabled]="!name || !login">Se connecter</ion-button>
+    </form>
+    <p class="forgotten-password">Login oublié ?</p>
+  </div>
+</ion-content>

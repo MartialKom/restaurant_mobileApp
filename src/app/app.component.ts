@@ -11,6 +11,8 @@ export class AppComponent implements OnInit {
   public appPages = [
     { title: 'Restaurants', url: '/restaurants/all', icon: 'restaurant' },
     { title: 'Mes Reservations', url: '/restaurants/reservations', icon: 'bookmarks' },
+    { title: 'Connexion', url: '/restaurants/login', icon: 'person-circle' },
+    
   ];
   listReservation: reservationDto[] = [];
   public labels = ['Food', 'Fun'];

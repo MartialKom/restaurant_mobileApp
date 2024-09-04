@@ -3,6 +3,7 @@ import { Restaurant } from '../../models/restaurant';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { reservationRequest } from '../../models/reservation.request';
+import { RestaurantLogin } from '../../models/restaurant.login.request';
 
 @Injectable({
   providedIn: 'root'
@@ -22,5 +23,9 @@ export class RestaurantService {
 
   async deleteReservation(reservationNumber: string){
     return await this.http.delete(environment.baseUrl+environment.reservationPath+reservationNumber);
+  }
+
+  async loginRestaurant(loginRequest: RestaurantLogin){
+    return await this.http.post(environment.baseUrl+environment.restaurantLoginPath, loginRequest);
   }
 }

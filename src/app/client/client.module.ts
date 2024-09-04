@@ -7,10 +7,11 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { OneRestaurantComponent } from './pages/one-restaurant/one-restaurant.component';
 import { ReservationListComponent } from './pages/reservation-list/reservation-list.component';
+import { LoginRestaurantComponent } from './pages/login-restaurant/login-restaurant.component';
 
 
 @NgModule({
-  declarations: [AllRestaurantsComponent, OneRestaurantComponent, ReservationListComponent],
+  declarations: [AllRestaurantsComponent, OneRestaurantComponent, ReservationListComponent, LoginRestaurantComponent],
   imports: [
     CommonModule,
     ClientRoutingModule,
