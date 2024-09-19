@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  baseUrl: 'http://localhost:8000/',
+  baseUrl: 'http://207.180.206.20:8001/',
   getAllRestaurantPath: 'restaurant/city/',
   getOneRestaurantPath:'restaurant/',
   reservationPath: 'reservation/',
