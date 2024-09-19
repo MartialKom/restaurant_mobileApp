@@ -10,6 +10,7 @@ import { OverlayEventDetail } from '@ionic/core/components';
 import { reservationDto } from '../../models/reservation.dto';
 import { LocalStorageService } from '../../services/storage/local-storage.service';
 import { ToastController } from '@ionic/angular';
+import { UserService } from '../../services/authentication/user.service';
 
 
 @Component({
@@ -47,7 +48,7 @@ export class OneRestaurantComponent implements OnInit {
   colors = ['primary', 'secondary', 'tertiary', 'success', 'warning', 'danger'];
   isModalOpen = false;
   reservationName!: string;
-
+  isConnected:boolean = false;
   message =
     'This modal example uses triggers to automatically open a modal when the button is clicked.';
 
@@ -61,10 +62,15 @@ export class OneRestaurantComponent implements OnInit {
     private router: Router,
     private restaurantService: RestaurantService,
     private localStorage: LocalStorageService,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private userService: UserService
   ) {}
 
   async ngOnInit() {
+    
+    this.userService.isConnected$.subscribe(isConnected => {
+      this.isConnected = isConnected;
+    });
     const restaurantId = this.restaurantId = this.route.snapshot.paramMap.get('id');
     (
       await this.restaurantService.getOnRestaurant(

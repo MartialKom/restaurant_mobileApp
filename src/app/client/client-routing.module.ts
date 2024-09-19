@@ -4,6 +4,8 @@ import { AllRestaurantsComponent } from './pages/all-restaurants/all-restaurants
 import { OneRestaurantComponent } from './pages/one-restaurant/one-restaurant.component';
 import { ReservationListComponent } from './pages/reservation-list/reservation-list.component';
 import { LoginRestaurantComponent } from './pages/login-restaurant/login-restaurant.component';
+import { ReservationCalendarComponent } from './pages/reservation-calendar/reservation-calendar.component';
+import { AuthGuardService } from './services/authentication/auth.guard.service';
 
 const routes: Routes = [
   {
@@ -29,6 +31,11 @@ const routes: Routes = [
       {
         path: 'login',
         component: LoginRestaurantComponent
+      },
+      {
+        path: 'calendar/:id',
+        component: ReservationCalendarComponent,
+        canActivate: [AuthGuardService]
       }
     ]
   },

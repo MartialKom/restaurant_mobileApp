@@ -24,8 +24,8 @@ export class LocalStorageService {
   }
 
 
-  async removeItem() {
-    await this.storage.remove('key');
+  async removeItem(key: string) {
+    await this.storage.remove(key);
   }
 
   async clearStorage() {

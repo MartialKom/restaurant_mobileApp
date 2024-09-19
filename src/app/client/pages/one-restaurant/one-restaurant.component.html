@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
+    <ion-buttons slot="start" *ngIf="!isConnected">
       <ion-back-button defaultHref="/restaurants/all"></ion-back-button>
     </ion-buttons>
     <ion-title>Détails du restaurant</ion-title>
@@ -35,7 +35,7 @@
         <ion-icon name="mail" slot="start"></ion-icon>
         <ion-label>Email : {{ restaurant?.email }}</ion-label>
       </ion-item>
-      <ion-button expand="block" id="open-modal" >
+      <ion-button expand="block" id="open-modal" *ngIf="!isConnected">
         <ion-icon name="calendar" slot="start"></ion-icon>
         Faire une réservation
       </ion-button>

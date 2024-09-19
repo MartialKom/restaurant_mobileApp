@@ -12,7 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), IonicStorageModule.forRoot({
+  imports: [ BrowserModule, IonicModule.forRoot(), IonicStorageModule.forRoot({
     name: 'restaudb',
     driverOrder: [Drivers.IndexedDB, Drivers.LocalStorage]
   }), HttpClientModule, AppRoutingModule],

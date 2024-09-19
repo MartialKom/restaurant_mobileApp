@@ -4,7 +4,8 @@ export const environment = {
   getAllRestaurantPath: 'restaurant/city/',
   getOneRestaurantPath:'restaurant/',
   reservationPath: 'reservation/',
+  allReservationPath: 'reservation/restaurant/',
   reservationListKey: 'reservationList',
-  restaurantLoginPath: 'restaurant/login/',
+  restaurantLoginPath: 'restaurant/login',
   restaurantLoginKey: 'user'
 };

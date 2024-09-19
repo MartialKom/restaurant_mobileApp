@@ -28,7 +28,7 @@ export class ReservationListComponent implements OnInit {
 
     if (this.reservationList.length < 1) {
       console.log('Aucune reservation...');
-    } else this.loading = false;
+    }
   }
 
   async presentToast(

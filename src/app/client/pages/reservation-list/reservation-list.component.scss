@@ -8,7 +8,7 @@ ion-item {
   margin-bottom: 16px;
 }
 .reservation-item {
-  --background: rgb(26, 120, 69);
+  --background: rgb(111, 134, 121);
   --padding-start: 16px;
   --padding-end: 16px;
   --inner-padding-end: 0;
@@ -16,7 +16,9 @@ ion-item {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
-  margin-bottom: 16px;
+  margin-top: 11px;
+  margin-left: 10px;
+  margin-right: 10px;
 
   .item-image {
     margin-right: 16px;

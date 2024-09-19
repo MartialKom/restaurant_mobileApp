@@ -1,0 +1,113 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Reservations</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button expand="block" (click)="setToday()">Aujourd'hui</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+
+  <ion-loading [isOpen]="isLoading" [spinner]="'crescent'" [duration]="0"></ion-loading>
+  <ion-segment [(ngModel)]="calendar.mode">
+    <ion-segment-button value="month">Mois</ion-segment-button>
+    <ion-segment-button value="day">Jour</ion-segment-button>
+  </ion-segment>
+
+  
+
+  <ion-row style="display: flex; align-items: center; justify-content: space-between;">
+    <ion-col size="3" style="display: flex; justify-content: flex-start;">
+      <ion-button fill="clear" (click)="back()">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-col>
+  
+    <ion-col size="6" style="display: flex; justify-content: center; align-items: center;">
+      <h2 style="margin: 0;">
+        {{viewTitle}}
+      </h2>
+    </ion-col>
+  
+    <ion-col size="3" style="display: flex; justify-content: flex-end;">
+      <ion-button fill="clear" (click)="next()">
+        <ion-icon name="arrow-forward" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+
+  <calendar [eventSource]="eventSource"
+  [calendarMode]="calendar.mode"
+  [currentDate]="calendar.currentDate"
+  (onCurrentDateChanged)="onCurrentDateChanged($event)"
+  (onEventSelected)="onEventSelected($event)"
+  (onTitleChanged)="onViewTitleChanged($event)"
+  (onTimeSelected)="onTimeSelected($event)"
+  (onTitleChanged)="viewTitle = $event"
+  [autoSelect]="false"
+  [step]="calendar.step"
+  [startHour]="8"
+  [endHour]="22"
+  [startingDayWeek]="calendar.startingDayWeek" 
+  [monthviewDisplayEventTemplate]="template"
+  >        
+</calendar>
+
+<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button id="inputmodal">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+
+<ion-modal #modal trigger="inputmodal" [presentingElement]="presentingElement">
+  <ng-template>
+    <ion-header class="ion-no-border">
+      <ion-toolbar color="light">
+        <ion-buttons slot="start">
+          <ion-button (click)="modal.dismiss()">Fermer</ion-button>
+        </ion-buttons>
+        <ion-title> Reservation </ion-title>
+        <ion-buttons slot="end">
+          <ion-button color="primary" strong (click)="scheduleEvent()" [disabled]="!newEvent.title">Ajouter</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding modal">
+      <div class="group">
+        <ion-input type="text" [(ngModel)]="newEvent.title" placeholder="Nom du client"></ion-input>
+      </div>
+
+      <div class="group">
+        <ion-item (click)="showStart = !showStart">
+          <ion-label>Début</ion-label>
+          <ion-text slot="end">{{formattedStart}}</ion-text>
+        </ion-item>
+        <ion-datetime #start (ionChange)="startChanged(start.value)" [value]="newEvent.startTime" *ngIf="showStart" presentation="time-date"></ion-datetime>
+
+        <ion-item (click)="showEnd = !showEnd">
+          <ion-label>Fin</ion-label>
+          <ion-text slot="end">{{formattedEnd}}</ion-text>
+        </ion-item>
+        <ion-datetime #end (ionChange)="endChanged(end.value)" [value]="newEvent.endTime" *ngIf="showEnd" presentation="time"></ion-datetime>
+      </div>
+
+
+    </ion-content>
+
+  </ng-template>
+</ion-modal>
+
+
+<ng-template #template let-view="view" let-row="row" let-col="col">
+  {{view.dates[row*7+col].label}}
+  <div class="indicator-container">
+    <div class="event-indicator" *ngFor="let e of view.dates[row*7+col].events"></div>
+  </div>
+</ng-template>
+
+</ion-content>

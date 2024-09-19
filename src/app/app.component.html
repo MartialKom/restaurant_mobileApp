@@ -6,12 +6,30 @@
           <ion-list-header>LocalDining</ion-list-header>
           <ion-note>Hi... Enjoy your meal !</ion-note>
 
-          <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
-            <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
-              <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
-              <ion-label>{{ p.title }}</ion-label>
-            </ion-item>
-          </ion-menu-toggle>
+          <div *ngIf="!isConnected">
+            <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
+              <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
+                <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+                <ion-label>{{ p.title }}</ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+          </div>
+
+          <div *ngIf="isConnected">
+            <ion-menu-toggle auto-hide="false" *ngFor="let p of appConectedPages; let i = index">
+              <ion-item routerDirection="root" [routerLink]=" [p.url + restaurantId]" lines="none" detail="false" routerLinkActive="selected">
+                <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+                <ion-label>{{ p.title }}</ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+            <ion-menu-toggle auto-hide="false">
+              <ion-item (click)="logout()" lines="none" detail="false" >
+                <ion-icon aria-hidden="true" slot="start" [ios]="'log-out-outline'" [md]="'log-out-sharp'"></ion-icon>
+                <ion-label>Déconnection</ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+          </div>
+
         </ion-list>
 
         <ion-list id="labels-list">

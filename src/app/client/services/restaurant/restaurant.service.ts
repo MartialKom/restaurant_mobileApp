@@ -28,4 +28,8 @@ export class RestaurantService {
   async loginRestaurant(loginRequest: RestaurantLogin){
     return await this.http.post(environment.baseUrl+environment.restaurantLoginPath, loginRequest);
   }
+
+  async getRestaurantReservation(id:number){
+    return await this.http.get(environment.baseUrl+environment.allReservationPath+id);
+  }
 }
