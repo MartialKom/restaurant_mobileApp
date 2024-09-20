@@ -54,6 +54,9 @@
         <ion-accordion *ngFor="let day of daysOfWeek; let i = index">
           <ion-item slot="header" color="light">
             <ion-label>{{ day }}</ion-label>
+            <ion-button *ngIf="isConnected" fill="clear" (click)="openEditModal(day)">
+              <ion-icon name="create-outline"></ion-icon>
+            </ion-button>
           </ion-item>
           <div class="accordion-content" slot="content">
             <ion-list *ngFor="let menu of restaurant?.menuDtoList">

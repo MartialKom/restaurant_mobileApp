@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Menu {{ day }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <ion-list>
+    <ion-item *ngFor="let dish of dishes; let i = index">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12" size-sm="6">
+            <ion-input placeholder="Nom du plat" [(ngModel)]="dish.name"></ion-input>
+          </ion-col>
+          <ion-col size="9" size-sm="4">
+            <ion-input type="number" placeholder="Prix" [(ngModel)]="dish.price"></ion-input>
+          </ion-col>
+          <ion-col size="3" size-sm="2">
+            <ion-button fill="clear" (click)="removeDish(i)" color="danger">
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+  </ion-list>
+  <ion-button expand="block" (click)="addDish()">
+    <ion-icon name="add-outline" slot="start"></ion-icon>
+    Ajouter un plat
+  </ion-button>
+  <ion-button expand="block" (click)="saveChanges()" color="success" class="ion-margin-top">
+    <ion-icon name="save-outline" slot="start"></ion-icon>
+    Sauvegarder
+  </ion-button>
+</ion-content>

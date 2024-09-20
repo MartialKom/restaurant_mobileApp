@@ -13,10 +13,11 @@ import { ReservationCalendarComponent } from './pages/reservation-calendar/reser
 
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
+import { EditMenuModalComponent } from './pages/one-restaurant/edit-menu-modal.component';
 registerLocaleData(localeFr);
 
 @NgModule({
-  declarations: [AllRestaurantsComponent, OneRestaurantComponent, ReservationListComponent, LoginRestaurantComponent, ReservationCalendarComponent],
+  declarations: [AllRestaurantsComponent, OneRestaurantComponent, ReservationListComponent, LoginRestaurantComponent, ReservationCalendarComponent,EditMenuModalComponent],
   imports: [
     CommonModule,
     ClientRoutingModule,

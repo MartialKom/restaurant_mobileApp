@@ -5,13 +5,15 @@ import { RestaurantService } from '../../services/restaurant/restaurant.service'
 import { environment } from 'src/environments/environment';
 import { reservationRequest } from '../../models/reservation.request';
 import { NgForm } from '@angular/forms';
-import { IonModal } from '@ionic/angular';
+import { IonModal, ModalController } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core/components';
 import { reservationDto } from '../../models/reservation.dto';
 import { LocalStorageService } from '../../services/storage/local-storage.service';
 import { ToastController } from '@ionic/angular';
 import { UserService } from '../../services/authentication/user.service';
 import { HttpResponse } from '@capacitor-community/http';
+import { EditMenuModalComponent } from './edit-menu-modal.component';
+import { MenuRequest } from '../../models/menu.request';
 
 @Component({
   selector: 'app-one-restaurant',
@@ -63,7 +65,8 @@ export class OneRestaurantComponent implements OnInit {
     private restaurantService: RestaurantService,
     private localStorage: LocalStorageService,
     private toastController: ToastController,
-    private userService: UserService
+    private userService: UserService,
+    private modalController: ModalController
   ) {}
 
   async ngOnInit() {
@@ -224,5 +227,65 @@ export class OneRestaurantComponent implements OnInit {
     const day = String(date.getDate()).padStart(2, '0');
 
     return `${year}-${month}-${day}`;
+  }
+
+  async openEditModal(day: string){
+
+    const menu = this.restaurant?.menuDtoList.find(m => m.days === day);
+    const modal = await this.modalController.create({
+      component: EditMenuModalComponent,
+      componentProps: {
+        day: day,
+        dishes: menu ? [...menu.dishes] : []
+      },
+      cssClass: 'menu-edit-modal' // Vous pouvez définir des styles spécifiques pour ce modal
+    });
+  
+    await modal.present();
+  
+    const { data } = await modal.onWillDismiss();
+    if (data) {
+      // Mettre à jour le menu avec les nouvelles données
+      if (menu) {
+        menu.dishes = data;
+      } else {
+        this.restaurant?.menuDtoList.push({ days: day, dishes: data });
+      }
+
+      this.isLoading = true;
+
+      const restaurantId = Number.parseInt(this.restaurantId || '0');
+      const menuRequest: MenuRequest = {
+        dishes: data,
+        days: day,
+        restaurantId: restaurantId
+      };
+
+      (await this.restaurantService.postMenu(menuRequest)).subscribe(
+        (response: HttpResponse)=> {
+          if(response){
+
+            if(response.status==201){
+              this.isLoading = false;
+              this.presentToast('top', 'Modification réussie', 'success');
+            }else if (response.status == 400) {
+              this.isLoading = false;
+              this.presentToast(
+                'top',
+                response.data.validationErrors[0],
+                'danger'
+              );
+            } else {
+              this.isLoading = false;
+              this.presentToast('top', response.data.errorMessage, 'danger');
+            }
+          } else {
+            this.isLoading = false;
+            this.presentToast('top', 'Erreur lors de la communication', 'danger');
+          }
+        }
+      )
+    }
+
   }
 }

@@ -4,7 +4,8 @@ import { environment } from 'src/environments/environment';
 import { reservationRequest } from '../../models/reservation.request';
 import { RestaurantLogin } from '../../models/restaurant.login.request';
 import { from } from 'rxjs';
-import { CapacitorHttp, HttpResponse } from '@capacitor/core';
+import { CapacitorHttp } from '@capacitor/core';
+import { MenuRequest } from '../../models/menu.request';
 
 @Injectable({
   providedIn: 'root'
@@ -63,5 +64,16 @@ export class RestaurantService {
     }
     return from(CapacitorHttp.get(options));
 
+  }
+
+  async postMenu(menuRequest: MenuRequest){
+
+    const options = {
+      url: environment.baseUrl+environment.addMenuPath,
+      headers: { 'Content-Type': 'application/json' },
+      data: menuRequest
+    }
+
+    return from(CapacitorHttp.post(options));
   }
 }

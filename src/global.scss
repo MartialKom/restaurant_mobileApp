@@ -26,6 +26,20 @@
 @import "@ionic/angular/css/flex-utils.css";
 @import 'swiper/scss';
 @import "@ionic/angular/css/ionic-swiper";
+
+.menu-edit-modal {
+    --height: 90%;
+    --border-radius: 16px;
+    --box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  @media (max-width: 768px) {
+    .menu-edit-modal {
+      --width: 90%;
+      --height: 80%;
+    }
+  }
+  
 /**
  * Ionic Dark Mode
  * -----------------------------------------------------
