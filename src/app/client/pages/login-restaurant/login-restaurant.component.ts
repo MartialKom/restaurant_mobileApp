@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Subject, finalize, takeUntil } from 'rxjs';
 import { AuthService } from '../../services/authentication/auth.service';
 import { UserService } from '../../services/authentication/user.service';
+import { HttpResponse } from '@capacitor-community/http';
 
 @Component({
   selector: 'app-login-restaurant',
@@ -34,7 +35,6 @@ export class LoginRestaurantComponent implements OnInit {
     this.destroy$.next();
     this.destroy$.complete();
   }
-
 
   async presentToast(
     position: 'top' | 'middle' | 'bottom',
@@ -72,27 +72,28 @@ export class LoginRestaurantComponent implements OnInit {
             takeUntil(this.destroy$),
             finalize(() => (this.loading = false))
           )
-          .subscribe(
-            async (response: any) => {
-              let id = response.content.id;
-              await this.authService.login(id);
-              console.log("login: "+id);
-              this.userService.setConnected(true);
-              this.router.navigate(['/restaurants/calendar', id]);
-            },
-            (err) => {
-              console.log('An error occur: ' + err.error);
-              if (err.status == 404) {
-                this.presentToast('top', err.error.errorMessage, 'danger');
-              } else {
-                this.presentToast(
-                  'top',
-                  'Erreur lors de la communication avec le serveur',
-                  'danger'
-                );
+          .subscribe(async (response: HttpResponse) => {
+            if (response) {
+              if (response.status == 200) {
+                this.loading = false;
+                let id = response.data.content.id;
+                await this.authService.login(id);
+                console.log('login: ' + id);
+                this.userService.setConnected(true);
+                this.router.navigate(['/restaurants/calendar', id]);
+              } else if (response.status == 404) {
+                this.loading = false;
+                this.presentToast('top', response.data.errorMessage, 'danger');
               }
+            } else {
+              this.loading = false;
+              this.presentToast(
+                'top',
+                'Erreur lors de la communication avec le serveur',
+                'danger'
+              );
             }
-          );
+          });
       } catch (error) {
         console.error("Erreur lors de l'appel au service:", error);
         this.loading = false;

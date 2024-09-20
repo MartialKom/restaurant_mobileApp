@@ -3,6 +3,9 @@
     <ion-buttons slot="start" *ngIf="!isConnected">
       <ion-back-button defaultHref="/restaurants/all"></ion-back-button>
     </ion-buttons>
+    <ion-buttons slot="start" *ngIf="isConnected">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ion-title>Détails du restaurant</ion-title>
   </ion-toolbar>
 </ion-header>

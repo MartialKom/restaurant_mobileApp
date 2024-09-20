@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { RestaurantService } from '../../services/restaurant/restaurant.service';
 import { environment } from 'src/environments/environment';
 import { ToastController } from '@ionic/angular';
+import { HttpResponse } from '@capacitor-community/http';
 
 @Component({
   selector: 'app-all-restaurants',
@@ -26,9 +27,9 @@ export class AllRestaurantsComponent  implements OnInit {
   async ngOnInit() {
     this.isLoading = true;
     (await this.restaurantService.getOnRestaurant(environment.getAllRestaurantPath+this.selectedCity)).subscribe(
-      (response:any) => {
-        console.log("Data: "+response.content);
-        this.restaurants = response.content;
+      (response:HttpResponse) => {
+        console.log("Data: "+response.data.content);
+        this.restaurants = response.data.content;
         this.filterRestaurants();
       },(err)=>{
         this.isLoading = false;

@@ -8,6 +8,7 @@ import { CalEvent } from '../../models/calEvent';
 import { RestaurantService } from '../../services/restaurant/restaurant.service';
 import { environment } from 'src/environments/environment';
 import { reservationDto } from '../../models/reservation.dto';
+import { HttpResponse } from '@capacitor-community/http';
 
 @Component({
   selector: 'app-reservation-calendar',
@@ -55,9 +56,9 @@ export class ReservationCalendarComponent implements OnInit {
     this.isLoading = true;
     const restaurantId = this.restaurantId = this.route.snapshot.paramMap.get('id');
       (await this.restaurantService.getRestaurantReservation(this.restaurantId)).subscribe(
-         (response:any)=>{
-          if(response.content){
-            this.reservationList = response.content;
+         (response:HttpResponse)=>{
+          if(response.data.content){
+            this.reservationList = response.data.content;
             this.eventSource = this.transformReservations(this.reservationList);
             this.isLoading = false;
           }

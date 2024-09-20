@@ -4,6 +4,7 @@ import { LocalStorageService } from '../../services/storage/local-storage.servic
 import { AlertController, ToastController } from '@ionic/angular';
 import { environment } from 'src/environments/environment';
 import { RestaurantService } from '../../services/restaurant/restaurant.service';
+import { HttpResponse } from '@capacitor-community/http';
 
 @Component({
   selector: 'app-reservation-list',
@@ -49,7 +50,7 @@ export class ReservationListComponent implements OnInit {
   async cancelReservation(number: string, index: number) {
     this.loading = true;
     (await this.restaurantService.deleteReservation(number)).subscribe(
-      (response: any) => {
+      (response: HttpResponse) => {
         this.reservationList.splice(index, 1);
         this.presentToast('top', 'Reservation annulée', 'success');
         this.loading = false;

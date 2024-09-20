@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Restaurant } from '../../models/restaurant';
-import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { reservationRequest } from '../../models/reservation.request';
 import { RestaurantLogin } from '../../models/restaurant.login.request';
+import { from } from 'rxjs';
+import { CapacitorHttp, HttpResponse } from '@capacitor/core';
 
 @Injectable({
   providedIn: 'root'
@@ -11,25 +12,56 @@ import { RestaurantLogin } from '../../models/restaurant.login.request';
 export class RestaurantService {
   restaurants: Restaurant[] = []; 
 
-  constructor(private http: HttpClient) { }
+  constructor() { }
 
   async getOnRestaurant(path:string){
-    return await this.http.get(environment.baseUrl+path);
+    const options = {
+      url: environment.baseUrl+path
+    }
+    return from(CapacitorHttp.get(options));
+    //return from(Http.get(options));
+    //return await this.http.get(environment.baseUrl+path);
   }
 
   async makeReservation(path:string, reservation: reservationRequest){
-    return await this.http.post(environment.baseUrl+path, reservation);
+
+    const options = {
+      url: environment.baseUrl+path,
+      headers: { 'Content-Type': 'application/json' },
+      data: reservation
+    }
+    return from(CapacitorHttp.post(options));
+    //return await this.http.post(environment.baseUrl+path, reservation);
   }
 
   async deleteReservation(reservationNumber: string){
-    return await this.http.delete(environment.baseUrl+environment.reservationPath+reservationNumber);
+    const options = {
+      url: environment.baseUrl+environment.reservationPath+reservationNumber
+    }
+
+    return from(CapacitorHttp.delete(options));
+
+    //return await this.http.delete(environment.baseUrl+environment.reservationPath+reservationNumber);
   }
 
   async loginRestaurant(loginRequest: RestaurantLogin){
-    return await this.http.post(environment.baseUrl+environment.restaurantLoginPath, loginRequest);
+
+    const options = {
+      url: environment.baseUrl+environment.restaurantLoginPath,
+      headers: { 'Content-Type': 'application/json' },
+      data: loginRequest
+    }
+    return from(CapacitorHttp.post(options));
+
+    //return await this.http.post(environment.baseUrl+environment.restaurantLoginPath, loginRequest);
   }
 
   async getRestaurantReservation(id:number){
-    return await this.http.get(environment.baseUrl+environment.allReservationPath+id);
+
+    const options = {
+      url: environment.baseUrl+environment.allReservationPath+id
+    }
+    return from(CapacitorHttp.get(options));
+
   }
 }

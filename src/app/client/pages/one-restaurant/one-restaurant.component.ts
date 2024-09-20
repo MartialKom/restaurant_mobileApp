@@ -11,7 +11,7 @@ import { reservationDto } from '../../models/reservation.dto';
 import { LocalStorageService } from '../../services/storage/local-storage.service';
 import { ToastController } from '@ionic/angular';
 import { UserService } from '../../services/authentication/user.service';
-
+import { HttpResponse } from '@capacitor-community/http';
 
 @Component({
   selector: 'app-one-restaurant',
@@ -23,8 +23,8 @@ export class OneRestaurantComponent implements OnInit {
   invalidForm: boolean = false;
   isLoading = false;
   restaurantId!: string | null;
-  reservationList: reservationDto[] =[];
-  reservationDto!: reservationDto ;
+  reservationList: reservationDto[] = [];
+  reservationDto!: reservationDto;
 
   reservation: reservationRequest = {
     restaurantId: 0,
@@ -48,13 +48,13 @@ export class OneRestaurantComponent implements OnInit {
   colors = ['primary', 'secondary', 'tertiary', 'success', 'warning', 'danger'];
   isModalOpen = false;
   reservationName!: string;
-  isConnected:boolean = false;
+  isConnected: boolean = false;
   message =
     'This modal example uses triggers to automatically open a modal when the button is clicked.';
 
   reservationDate: string = this.myFormatDate(new Date());
-  startTime: string = new Date().toISOString()
-  endTime: string = new Date().toISOString()
+  startTime: string = new Date().toISOString();
+  endTime: string = new Date().toISOString();
   reservationSeats: number = 1;
 
   constructor(
@@ -67,21 +67,25 @@ export class OneRestaurantComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    
-    this.userService.isConnected$.subscribe(isConnected => {
+    this.userService.isConnected$.subscribe((isConnected) => {
       this.isConnected = isConnected;
     });
-    const restaurantId = this.restaurantId = this.route.snapshot.paramMap.get('id');
+    const restaurantId = (this.restaurantId =
+      this.route.snapshot.paramMap.get('id'));
     (
       await this.restaurantService.getOnRestaurant(
         environment.getOneRestaurantPath + restaurantId
       )
-    ).subscribe((response: any) => {
-      this.restaurant = response.content;
+    ).subscribe((response: HttpResponse) => {
+      this.restaurant = response.data.content;
     });
   }
 
-  async presentToast(position: 'top' | 'middle' | 'bottom', message: string, color: 'success' | 'danger') {
+  async presentToast(
+    position: 'top' | 'middle' | 'bottom',
+    message: string,
+    color: 'success' | 'danger'
+  ) {
     const toast = await this.toastController.create({
       message: message,
       duration: 5000,
@@ -91,8 +95,6 @@ export class OneRestaurantComponent implements OnInit {
 
     await toast.present();
   }
-
-
 
   makeReservation() {
     // Logique pour faire une réservation
@@ -150,40 +152,50 @@ export class OneRestaurantComponent implements OnInit {
       this.reservation.clientName = this.reservationName;
       this.reservation.nbOfPeople = this.reservationSeats;
 
-      const restaurantId = Number.parseInt(this.restaurantId || "4");
+      const restaurantId = Number.parseInt(this.restaurantId || '4');
       this.reservation.restaurantId = restaurantId;
       (
         await this.restaurantService.makeReservation(
           environment.reservationPath,
           this.reservation
         )
-      ).subscribe(async (response: any) => {
+      ).subscribe(async (response: HttpResponse) => {
+        if (response) {
+          if (response.status == 200) {
+            console.log(response.data.content);
 
-        if(response.content){
-          console.log(response.content);
+            this.reservationList = await this.localStorage.get(
+              environment.reservationListKey
+            );
+            this.reservationDto = response.data.content;
 
-          this.reservationList =  await this.localStorage.get(environment.reservationListKey);
-          this.reservationDto = response.content;
+            this.reservationList.push(this.reservationDto);
+            await this.localStorage.set(
+              environment.reservationListKey,
+              this.reservationList
+            );
 
-          this.reservationList.push(this.reservationDto);
-          await this.localStorage.set(environment.reservationListKey, this.reservationList);
+            this.isLoading = false;
 
+            form.resetForm();
+            this.cancel();
+            this.presentToast('middle', 'Reservation réussie', 'success');
+          } else if (response.status == 400) {
+            this.isLoading = false;
+            this.presentToast(
+              'top',
+              response.data.validationErrors[0],
+              'danger'
+            );
+          } else {
+            this.isLoading = false;
+            this.presentToast('top', response.data.errorMessage, 'danger');
+          }
+        } else {
           this.isLoading = false;
-          
-          form.resetForm();
-          this.cancel();
-          this.presentToast("middle", "Reservation réussie", "success");
-        } 
-
-      },(err)=>{
-        console.log("An error occur: "+err.error);
-        this.isLoading = false;
-        if(err.status == 400){
-          this.presentToast("top",err.error.validationErrors[0], "danger");
-        } else
-        this.presentToast("top",err.error.errorMessage, "danger");
+          this.presentToast('top', 'Erreur lors de la communication', 'danger');
+        }
       });
-
     } else {
       this.invalidForm = true;
     }
