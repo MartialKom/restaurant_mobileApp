@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { ClientRoutingModule } from './client-routing.module';
 import { AllRestaurantsComponent } from './pages/all-restaurants/all-restaurants.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { OneRestaurantComponent } from './pages/one-restaurant/one-restaurant.component';
 import { ReservationListComponent } from './pages/reservation-list/reservation-list.component';
@@ -14,16 +14,25 @@ import { ReservationCalendarComponent } from './pages/reservation-calendar/reser
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { EditMenuModalComponent } from './pages/one-restaurant/edit-menu-modal.component';
+import { EditRestaurantModalComponent } from './pages/one-restaurant/edit-restaurant.component';
 registerLocaleData(localeFr);
 
 @NgModule({
-  declarations: [AllRestaurantsComponent, OneRestaurantComponent, ReservationListComponent, LoginRestaurantComponent, ReservationCalendarComponent,EditMenuModalComponent],
+  declarations: [
+    AllRestaurantsComponent, 
+    OneRestaurantComponent, 
+    ReservationListComponent, 
+    LoginRestaurantComponent, 
+    ReservationCalendarComponent,
+    EditMenuModalComponent,
+    EditRestaurantModalComponent],
   imports: [
     CommonModule,
     ClientRoutingModule,
     FormsModule,
     IonicModule,
-    NgCalendarModule
+    NgCalendarModule,
+    ReactiveFormsModule
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

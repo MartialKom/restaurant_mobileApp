@@ -6,6 +6,7 @@ import { RestaurantLogin } from '../../models/restaurant.login.request';
 import { from } from 'rxjs';
 import { CapacitorHttp } from '@capacitor/core';
 import { MenuRequest } from '../../models/menu.request';
+import { RestauntRequest } from '../../models/restaurant.request';
 
 @Injectable({
   providedIn: 'root'
@@ -75,5 +76,16 @@ export class RestaurantService {
     }
 
     return from(CapacitorHttp.post(options));
+  }
+
+  async updateRestaurant(restaurantRequest: RestauntRequest , restaurantId: number){
+
+    const options = {
+      url: environment.baseUrl+environment.getOneRestaurantPath+restaurantId,
+      headers: { 'Content-Type': 'application/json' },
+      data: restaurantRequest
+    }
+
+    return from(CapacitorHttp.put(options));
   }
 }

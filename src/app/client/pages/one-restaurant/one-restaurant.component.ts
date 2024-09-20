@@ -14,6 +14,8 @@ import { UserService } from '../../services/authentication/user.service';
 import { HttpResponse } from '@capacitor-community/http';
 import { EditMenuModalComponent } from './edit-menu-modal.component';
 import { MenuRequest } from '../../models/menu.request';
+import { EditRestaurantModalComponent } from './edit-restaurant.component';
+import { RestauntRequest } from '../../models/restaurant.request';
 
 @Component({
   selector: 'app-one-restaurant',
@@ -21,7 +23,7 @@ import { MenuRequest } from '../../models/menu.request';
   styleUrls: ['./one-restaurant.component.scss'],
 })
 export class OneRestaurantComponent implements OnInit {
-  restaurant: Restaurant | undefined;
+  restaurant: Restaurant | undefined ;
   invalidForm: boolean = false;
   isLoading = false;
   restaurantId!: string | null;
@@ -84,53 +86,11 @@ export class OneRestaurantComponent implements OnInit {
     });
   }
 
-  async presentToast(
-    position: 'top' | 'middle' | 'bottom',
-    message: string,
-    color: 'success' | 'danger'
-  ) {
-    const toast = await this.toastController.create({
-      message: message,
-      duration: 5000,
-      color: color,
-      position: position,
-    });
 
-    await toast.present();
-  }
+  // *******************************************************************MAIN FUNCTIONS*******************************************************************
 
-  makeReservation() {
-    // Logique pour faire une réservation
-    this.isModalOpen = true;
-  }
-
-  viewMap() {
-    this.router.navigate(['/restaurants/map', this.restaurant?.address]);
-  }
-
-  getDishColor(index: number): string {
-    return this.colors[index % this.colors.length];
-  }
-
-  dismissModal() {
-    this.isModalOpen = false;
-  }
-
-  onDateChange(event: any) {
-    this.invalidForm = false;
-    this.reservationDate = event.detail.value;
-  }
-
-  onStartTimeChange(event: any) {
-    this.invalidForm = false;
-    this.startTime = event.detail.value;
-  }
-
-  onEndTimeChange(event: any) {
-    this.invalidForm = false;
-    this.endTime = event.detail.value;
-  }
-
+  
+  //Make an reservation
   async onSubmitReservation(form: NgForm) {
     if (form.valid) {
       this.invalidForm = false;
@@ -229,6 +189,7 @@ export class OneRestaurantComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 
+  //Edit Menu details per days
   async openEditModal(day: string){
 
     const menu = this.restaurant?.menuDtoList.find(m => m.days === day);
@@ -288,4 +249,113 @@ export class OneRestaurantComponent implements OnInit {
     }
 
   }
+
+  //Edit restaurant details
+  async openEditRestaurantModal(){
+    const modal = await this.modalController.create({
+      component: EditRestaurantModalComponent,
+      componentProps: {
+        restaurant: { ...this.restaurant } // Création d'une copie pour éviter la modification directe
+      }
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    if (data) {
+      // Mettre à jour les informations du restaurant
+      
+      
+
+      const restaurantRequest: RestauntRequest = {
+        name: data.name,
+        city: this.restaurant?.city,
+        address: data.address,
+        phone: data.phone,
+        type: data.type,
+        email: data.email,
+        description: data?.description,
+        openingHours: data?.openingHours,
+        capacity: data.capacity,
+        closingHours: data.closingHours
+      }
+
+      const restaurantId = Number.parseInt(this.restaurantId || '0');
+      
+      this.isLoading = true;
+      // Envoyer les modifications à l'API
+       (await this.restaurantService.updateRestaurant(restaurantRequest, restaurantId)).subscribe(
+        (response: HttpResponse) => {
+          if(response){
+            if(response.status==200){
+              this.isLoading = false;
+              this.presentToast('top', 'Modification réussie', 'success');
+              this.ngOnInit();
+            }else if (response.status == 400) {
+              this.isLoading = false;
+              this.presentToast(
+                'top',
+                response.data.validationErrors[0],
+                'danger'
+              );
+            } else {
+              this.isLoading = false;
+              this.presentToast('top', response.data.errorMessage, 'danger');
+            }
+          }
+          else {
+            this.isLoading = false;
+            this.presentToast('top', 'Erreur lors de la communication', 'danger');
+          }
+        },);
+    }
+  }
+
+
+
+
+  // *******************************************************************UTILS*******************************************************************
+  async presentToast(
+    position: 'top' | 'middle' | 'bottom',
+    message: string,
+    color: 'success' | 'danger'
+  ) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 5000,
+      color: color,
+      position: position,
+    });
+
+    await toast.present();
+  }
+
+ /* viewMap() {
+    this.router.navigate(['/restaurants/map', this.restaurant?.address]);
+  }*/
+
+  getDishColor(index: number): string {
+    return this.colors[index % this.colors.length];
+  }
+
+  dismissModal() {
+    this.isModalOpen = false;
+  }
+
+  onDateChange(event: any) {
+    this.invalidForm = false;
+    this.reservationDate = event.detail.value;
+  }
+
+  onStartTimeChange(event: any) {
+    this.invalidForm = false;
+    this.startTime = event.detail.value;
+  }
+
+  onEndTimeChange(event: any) {
+    this.invalidForm = false;
+    this.endTime = event.detail.value;
+  }
+
+
 }

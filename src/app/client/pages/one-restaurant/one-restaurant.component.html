@@ -14,15 +14,15 @@
 
 <ion-content>
   <div class="restaurant-header">
-    <img [src]="restaurant?.image" [alt]="restaurant?.name" (click)="viewMap()">
+    <img [src]="restaurant?.image" [alt]="restaurant?.name">
     <ion-card-header>
       <ion-card-title>{{ restaurant?.name }}</ion-card-title>
       <ion-card-subtitle>{{ restaurant?.type }}</ion-card-subtitle>
     </ion-card-header>
   </div>
-
+  
   <ion-loading [isOpen]="isLoading" [spinner]="'crescent'" [duration]="0"></ion-loading>
-
+  
   <ion-card>
     <ion-card-content class="restaurant-description">
       <p>{{ restaurant?.description }}</p>
@@ -38,9 +38,17 @@
         <ion-icon name="mail" slot="start"></ion-icon>
         <ion-label>Email : {{ restaurant?.email }}</ion-label>
       </ion-item>
+      <ion-item>
+        <ion-icon name="mail" slot="start"></ion-icon>
+        <ion-label>Adresse : {{ restaurant?.address }}</ion-label>
+      </ion-item>
       <ion-button expand="block" id="open-modal" *ngIf="!isConnected">
         <ion-icon name="calendar" slot="start"></ion-icon>
         Faire une réservation
+      </ion-button>
+      <ion-button expand="block" *ngIf="isConnected" (click)="openEditRestaurantModal()">
+        <ion-icon name="create" slot="start"></ion-icon>
+        Modifier les informations
       </ion-button>
     </ion-card-content>
   </ion-card>

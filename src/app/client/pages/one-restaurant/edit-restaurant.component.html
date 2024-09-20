@@ -1,0 +1,107 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Modifier le restaurant</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <form [formGroup]="restaurantForm" (ngSubmit)="saveChanges()">
+    <ion-list lines="full" class="ion-no-margin ion-no-padding">
+      <ion-item>
+        <ion-label position="stacked">Nom <ion-text color="danger">*</ion-text></ion-label>
+        <ion-input formControlName="name" type="text" required></ion-input>
+      </ion-item>
+      <ion-text color="danger" class="ion-padding-start" *ngIf="restaurantForm.get('name')!.touched && restaurantForm.get('name')!.hasError('required')">
+        <small>Le nom est obligatoire</small>
+      </ion-text>
+
+      <ion-item>
+        <ion-label position="stacked">Type <ion-text color="danger">*</ion-text></ion-label>
+        <ion-select formControlName="type" interface="popover">
+          <ion-select-option value="FAST_FOOD">Fast Food</ion-select-option>
+          <ion-select-option value="CASINO">Casino</ion-select-option>
+          <ion-select-option value="CAFE">Café</ion-select-option>
+          <ion-select-option value="RESTAURANT">Restaurant</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-text color="danger" class="ion-padding-start" *ngIf="restaurantForm.get('type')!.touched && restaurantForm.get('type')!.hasError('required')">
+        <small>Le type est obligatoire</small>
+      </ion-text>
+
+
+      <ion-item>
+        <ion-label position="stacked">Heure d'ouverture <ion-text color="danger">*</ion-text></ion-label>
+        <ion-datetime display-format="HH:mm" picker-format="HH:mm" formControlName="openingHours" presentation="time"></ion-datetime>
+      </ion-item>
+      <ion-text color="danger" class="ion-padding-start" *ngIf="restaurantForm.get('openingHours')!.touched && restaurantForm.get('openingHours')!.hasError('required')">
+        <small>L'heure d'ouverture est obligatoire</small>
+      </ion-text>
+
+      <ion-item>
+        <ion-label position="stacked">Heure de fermeture <ion-text color="danger">*</ion-text></ion-label>
+        <ion-datetime display-format="HH:mm" picker-format="HH:mm" formControlName="closingHours" presentation="time"></ion-datetime>
+      </ion-item>
+      <ion-text color="danger" class="ion-padding-start" *ngIf="restaurantForm.get('closingHours')!.touched && restaurantForm.get('closingHours')!.hasError('required')">
+        <small>L'heure de fermeture est obligatoire</small>
+      </ion-text>
+
+
+
+
+      <ion-item>
+        <ion-label position="stacked">Adresse <ion-text color="danger">*</ion-text></ion-label>
+        <ion-textarea formControlName="address" rows="3" required></ion-textarea>
+      </ion-item>
+      <ion-text color="danger" class="ion-padding-start" *ngIf="restaurantForm.get('address')!.touched && restaurantForm.get('address')!.hasError('required')">
+        <small>L'adresse est obligatoire</small>
+      </ion-text>
+
+      <ion-item>
+        <ion-label position="stacked">Description <ion-text color="danger">*</ion-text></ion-label>
+        <ion-textarea formControlName="description" rows="3" required></ion-textarea>
+      </ion-item>
+      <ion-text color="danger" class="ion-padding-start" *ngIf="restaurantForm.get('description')!.touched && restaurantForm.get('description')!.hasError('required')">
+        <small>La description est obligatoire</small>
+      </ion-text>
+
+      <ion-item>
+        <ion-label position="stacked">Capacité <ion-text color="danger">*</ion-text></ion-label>
+        <ion-input formControlName="capacity" type="number" required></ion-input>
+      </ion-item>
+      <ion-text color="danger" class="ion-padding-start" *ngIf="restaurantForm.get('capacity')!.touched && restaurantForm.get('capacity')!.hasError('required')">
+        <small>La capacité est obligatoire</small>
+      </ion-text>
+
+      <ion-item>
+        <ion-label position="stacked">Téléphone <ion-text color="danger">*</ion-text></ion-label>
+        <ion-input formControlName="phone" type="tel" required></ion-input>
+      </ion-item>
+      <ion-text color="danger" class="ion-padding-start" *ngIf="restaurantForm.get('phone')!.touched && restaurantForm.get('phone')!.hasError('required')">
+        <small>Le téléphone est obligatoire</small>
+      </ion-text>
+
+      <ion-item>
+        <ion-label position="stacked">Email </ion-label>
+        <ion-input formControlName="email" type="email"></ion-input>
+      </ion-item>
+
+     <!-- <ion-item>
+        <ion-label position="stacked">URL de l'image <ion-text color="danger">*</ion-text></ion-label>
+        <ion-input formControlName="image" type="url" required></ion-input>
+      </ion-item>
+      <ion-text color="danger" class="ion-padding-start" *ngIf="restaurantForm.get('image')!.touched && restaurantForm.get('image')!.hasError('required')">
+        <small>L'URL de l'image est obligatoire</small>
+      </ion-text>-->
+    </ion-list>
+
+    <div class="ion-padding">
+      <ion-button expand="block" type="submit" [disabled]="!restaurantForm.valid">
+        Sauvegarder les modifications
+      </ion-button>
+    </div>
+  </form>
+</ion-content>
