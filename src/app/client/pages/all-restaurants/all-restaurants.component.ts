@@ -15,7 +15,7 @@ export class AllRestaurantsComponent  implements OnInit {
   restaurants: Restaurant[] = [] ;
 
   filteredRestaurants: Restaurant[] = [];
-  selectedCity: string = 'yaoundé';
+  selectedCity: string = 'yaounde';
   selectedType: string = '';
   openOnly: boolean = false;
   searchTerm: string = '';
@@ -26,11 +26,13 @@ export class AllRestaurantsComponent  implements OnInit {
 
   async ngOnInit() {
     this.isLoading = true;
-    (await this.restaurantService.getOnRestaurant(environment.getAllRestaurantPath+this.selectedCity)).subscribe(
+    (await this.restaurantService.getOnRestaurant(environment.getOneRestaurantPath)).subscribe(
       (response:HttpResponse) => {
         console.log("Data: "+response.data.content);
         this.restaurants = response.data.content;
+        console.log("Data: "+this.restaurants);
         this.filterRestaurants();
+        console.log("Data: "+this.filteredRestaurants);
       },(err)=>{
         this.isLoading = false;
         this.presentToast("top","Erreur lors de la communication avec le serveur", "danger");
@@ -50,11 +52,14 @@ export class AllRestaurantsComponent  implements OnInit {
   }
 
    filterRestaurants() {
+    console.log(this.selectedCity, this.selectedType, this.openOnly, this.searchTerm);
     this.filteredRestaurants = this.restaurants.filter(restaurant => {
       const cityMatch = this.selectedCity === '' || restaurant.city.toLowerCase() === this.selectedCity.toLowerCase();
       const typeMatch = this.selectedType === '' || restaurant.type.toLowerCase() === this.selectedType.toLowerCase();
       const openMatch = !this.openOnly || restaurant.open;
       const searchMatch = restaurant.name.toLowerCase().includes(this.searchTerm.toLowerCase());
+      
+      console.log(restaurant.name, cityMatch, typeMatch, openMatch, searchMatch);
       return cityMatch && typeMatch && openMatch && searchMatch;
     });
     this.isLoading = false;
